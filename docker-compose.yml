@@ -1,0 +1,20 @@
+version: "3.6"
+services:
+  postgresql:
+    image: "postgres:9.6.23"
+    volumes:
+      - ./database/postgis:/var/lib/postgresql
+      - ./database/backups:/backups
+    env_file: 
+      - ./.env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_ROOT_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    ports:
+      - "5432:5432"
+    restart: "always"
+  adminer:
+    image: "adminer:4.7"
+    ports:
+      - "8080:8080"

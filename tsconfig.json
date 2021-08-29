@@ -1,0 +1,26 @@
+{
+    "extends": "fastify-tsconfig",
+    "compilerOptions": {
+        "lib": ["es5", "es6", "es7", "es2015", "es2016","es2017", "es2018", "esnext"],
+        "target": "es2017",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "declaration": true,
+        "declarationMap": true,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "baseUrl": "./",
+        "rootDir": "src/",
+        "paths": {
+            "@/Interfaces/*": ["src/interfaces/*"],
+            "@/Plugins/*": ["src/plugins/*"],
+            "@/Routes/*": ["src/routes/*"],
+            "@/Types/*": ["src/types/*"],
+            "@/Entity/*": ["src/entity/*"],
+        },
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+    },
+    "include": ["src/**/*.ts"]
+}
