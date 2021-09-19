@@ -6,6 +6,8 @@ import { Article } from "@/Interfaces/article";
 
 import { Article as ArticleEntity } from "../../entity/Article";
 
+type paramsId = { id: string };
+
 const article: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.get("/all", async function (request, reply) {
     try {
@@ -28,6 +30,28 @@ const article: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     }
   });
 
+  fastify.get<{ Params: paramsId }>(
+    "/byId/:id",
+    async function (request, reply) {
+      try {
+        const idArticle: string = request.params.id;
+        const repositoryArticle: Repository<ArticleEntity> =
+          await getRepository(ArticleEntity);
+
+        const findArticleById: Article | undefined =
+          await repositoryArticle.findOne(idArticle);
+
+        if (!findArticleById) {
+          reply.notFound("Article not found");
+        }
+
+        return { result: findArticleById };
+      } catch (err) {
+        reply.internalServerError(err);
+      }
+    }
+  );
+
   fastify.post<{ Body: Article }>("/", async function (request, reply) {
     try {
       const repositoryArticle: Repository<ArticleEntity> =
@@ -42,7 +66,7 @@ const article: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     }
   });
 
-  fastify.put<{ Body: Article; Params: { id: string } }>(
+  fastify.put<{ Body: Article; Params: paramsId }>(
     "/update/:id",
     async function (request, reply) {
       try {
