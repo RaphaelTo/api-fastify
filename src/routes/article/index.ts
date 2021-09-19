@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from "fastify";
-import { getRepository, Repository } from "typeorm";
+import { getRepository, Repository, UpdateResult } from "typeorm";
 
 import { Article } from "@/Interfaces/article";
 //import { addArticle as addArticleTypes, findAllArticle } from "@/Types/article";
@@ -41,6 +41,27 @@ const article: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       reply.internalServerError(err.message);
     }
   });
+
+  fastify.put<{ Body: Article; Params: { id: string } }>(
+    "/update/:id",
+    async function (request, reply) {
+      try {
+        const article: Article = request.body;
+        const idArticle: string = request.params.id;
+        const repositoryArticle: Repository<ArticleEntity> =
+          getRepository(ArticleEntity);
+
+        const updateArticle: UpdateResult = await repositoryArticle.update(
+          { id: idArticle },
+          article
+        );
+
+        return { result: updateArticle };
+      } catch (err) {
+        reply.internalServerError(err.message);
+      }
+    }
+  );
 };
 
 export default article;
